@@ -1,0 +1,117 @@
+1: Scrape the data from the website/Sql database. Here we are using Amazon/Flipkart. We will particularly scrape the reviews of the different products. This step is called extraction.
+
+2: The we will perform the tranformation of data and store it in native database. 
+3: Then we will load the data in the vectordb and nosql.
+
+After loading the data we will create the chatbot using RAG/Agentic RAG which will solve the confusion of selecting the product.
+
+Use Case for DEE:
+
+1️⃣ Knowledge Management & Internal Support
+
+Use case: Employees and engineers often need quick access to technical manuals, safety guidelines, or operational procedures.
+
+A chatbot can:
+
+Provide instant answers to safety protocols, maintenance manuals, or troubleshooting guides.
+
+Help new employees navigate complex procedures without sifting through PDFs or binders.
+
+Reduce reliance on human experts for routine questions.
+
+Example:
+
+“What is the safety procedure for a gas leak in Zone B?” → Chatbot provides step-by-step instructions.
+
+2️⃣ Maintenance & Predictive Analytics
+
+Use case: Equipment failure is costly and dangerous.
+
+Chatbots integrated with IoT sensors and predictive maintenance platforms can:
+
+Notify engineers of potential equipment issues.
+
+Suggest troubleshooting steps or schedule maintenance automatically.
+
+Log maintenance activities via conversational input.
+
+Example:
+
+“Check the pressure readings for Pump 3 last 24 hours.” → Chatbot retrieves sensor data and flags anomalies.
+
+3️⃣ Safety & Emergency Response
+
+Use case: On-site safety is critical in oil and gas operations.
+
+Chatbots can act as first responders in emergencies:
+
+Guide workers through emergency procedures.
+
+Provide checklists for evacuation, spill containment, or fire suppression.
+
+Integrate with alert systems to notify managers or emergency services.
+
+Example:
+
+“Spill detected in Section 5” → Chatbot guides workers on containment and logs incident for reporting.
+
+4️⃣ Operational Efficiency
+
+Use case: Coordinating logistics and production can be complex.
+
+Chatbots can help:
+
+Track inventory of chemicals, spare parts, and fuel.
+
+Schedule shipments and deliveries.
+
+Answer routine operational questions, reducing calls/emails.
+
+Example:
+
+“How many drilling rigs are operational in Gulf region?” → Chatbot provides real-time data.
+
+5️⃣ Training & Simulation
+
+Use case: Onboarding or safety drills can be expensive and time-consuming.
+
+Chatbots can provide:
+
+Interactive training modules for employees.
+
+Simulated scenarios for emergency response.
+
+Quizzes to ensure compliance with safety standards.
+
+Example:
+
+“Simulate a pipeline leak scenario” → Chatbot guides employee through steps virtually.
+
+6️⃣ Customer & Stakeholder Communication
+
+Use case: Companies deal with multiple stakeholders — investors, contractors, and regulatory bodies.
+
+Chatbots can:
+
+Answer queries about production reports, environmental compliance, or project status.
+
+Handle basic customer support for energy clients.
+
+Provide 24/7 status updates on pipelines, storage, or deliveries.
+
+Example:
+
+“Send the monthly production report for Platform 7 to the regulatory body.” → Chatbot automates report generation.
+
+Technologies to Combine
+
+NLP & Conversational AI: For natural language understanding.
+
+IoT & Sensors: For real-time monitoring.
+
+Knowledge Graphs / Document Embeddings: For technical manuals and operational SOPs.
+
+Integration with ERP/SCADA systems: To retrieve real-time production and inventory data.
+
+💡 Bottom line:
+A chatbot in oil & gas acts as a digital assistant — improving safety, knowledge sharing, predictive maintenance, and operational efficiency while reducing delays and human error.
