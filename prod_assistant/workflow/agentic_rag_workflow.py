@@ -2,7 +2,7 @@ from typing import TypedDict, Annotated, Sequence, Literal
 from langgraph.graph.message import add_messages
 from utils.model_loader import ModelLoader
 from utils.config_loader import load_config
-from retrieval.retriever import Retriever
+from prod_assistant.retrieval.retrieval import Retriever
 from langchain_core.messages import BaseMessage, HumanMessage
 from langchain.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.output_parsers import StrOutputParser

@@ -1,5 +1,5 @@
 import os
-from retrieval.retriever import Retriever
+from prod_assistant.retrieval.retrieval import Retriever
 from utils.model_loader import ModelLoader
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
@@ -32,8 +32,8 @@ def build_chain(query):
     retrieved_docs = retriever.invoke(query)
     llm = modelloader.load_llm()
 
-    retrieved_context =[format_docs(docs) for docs in retrieved_docs]
-
+    # retrieved_context =[format_docs(docs) for docs in retrieved_docs]
+    retrieved_context = [format_docs(retrieved_docs)]
     prompt = ChatPromptTemplate.from_template(
         PROMPT_REGISTRY[PromptType.PRODUCT_BOT].template
     )
