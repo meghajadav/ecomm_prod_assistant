@@ -1,5 +1,5 @@
 import os
-from prod_assistant.retrieval.retrieval import Retriever
+from prod_assistant.retrieval.retriever import Retriever
 from utils.model_loader import ModelLoader
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough

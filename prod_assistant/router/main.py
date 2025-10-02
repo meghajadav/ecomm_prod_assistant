@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from langchain_core.messages import HumanMessage
-from workflow.agentic_workflow_with_mcp_websearch import AgenticRAG
+from prod_assistant.workflow.agentic_rag_workflow_with_mcp_websearch import AgenticRAG
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -28,8 +28,9 @@ async def index(request: Request):
 
 @app.post("/get", response_class=HTMLResponse)
 async def chat(msg: str = Form(...)):
-    """Call the Agentic RAG workflow."""
+    """Call the Agentic RAG workflow asynchronously."""
     rag_agent = AgenticRAG()
-    answer = rag_agent.run(msg)   # run() already returns final answer string
+    # Use the async run method to support async nodes/tools
+    answer = await rag_agent.run_async(msg)
     print(f"Agentic Response: {answer}")
     return answer

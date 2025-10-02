@@ -59,4 +59,57 @@ COPY . . -> copy everything from the current directory to the above app director
 
 
 
+# -------------------##########################----------------------------
+1. Elastic Container Service:
+    - It is AWS own property container orchestration server
+    - Docker image we have can be simply executed on ECS and ECS will manage it automatically.
+    - manage automatically means scheduling, scaling, healthcheck etc will be managed by ECS.
+    - ECS can be run in 2 mode:
+        1. EC2
+        2. Fargate
+    - In EC2 mode we manage the cluster
+    - In fargate aws will manage the server
+    - ECS is AWS specific orchestration service
+    - we have app which we create image and deploy it in docker container
 
+
+# ------------------------------------------------------------------------------------------------
+## For Deployment
+In this project we have:
+- infra folder containing eks_with_ecr.yaml
+- k8 folder has deployment.yaml and service.yaml
+- workflows has deploy.yaml and infra.yaml
+
+Now the first file called here will be infra.yaml in workflows which in turn will call eks_with_ecr.yaml in infra which in turn will call deploy.yaml in workflows which in turn will call deployment.yaml and service.yaml in k8.
+
+infra.yaml->eks_with_ecr.yaml->deloy.yaml-> deployment.yaml and service.yaml
+
+
+To start with deployment first set all the secret keys in github secrets that is goto repo -> settings->secrets on left pane->secrets and variables->actions->new repository secret-> give key as an for example OPENAI_API_KEY that is name and the secret is the key generated from openai.
+
+# KEYS SETUP IN GITHUB SECRETS:
+    1. ASTRA_DB_API_ENDPOINT
+    2. ASTRA_DB_APPLICATION_TOKEN
+    3. ASTRA_DB_KEYSPACE
+    4. GOOGLE_API_KEY
+    5. OPENAI_API_KEY
+    6. AWS_ACCESS_KEY
+    7. AWS_SECRET_ACCESS_KEY
+    8. AWS_REGION
+
+Now in AWS IAM we will create the user:
+    - step1:  user name-> prod-assistant-deploy->on next attach policy-for POC purpose i attached administrator access policy->next->create user and now the user gets created
+
+    - step2: Now click on user we created to get the keys->security credentials->Create Access keys->check CLI->click create secret access key
+
+    - step3: Now copy this access key and secret access key and save it somewhere. It is required to connect to the aws.
+
+    - step4: copy the aws region we are working on and save it somehere.
+
+    - step5: Copy Access key and Secret Access key in github secrets
+
+    - Step6: Copy EKS cluster name from eks-with-ecr.yaml and ECRRepositoryName from eks-with-ecr.yaml. Also copy ECRRegistryName from eks-with-ecr.yaml
+
+    - Step7: Create Key value in github secrets for ECRRepositoryName and ECRRegistryName.yaml.
+
+    - Step8: Go to Rpository in github click on actions and from there click on provision infra EKS+ECR and there click on Run workflow and the infra for our project will be created.

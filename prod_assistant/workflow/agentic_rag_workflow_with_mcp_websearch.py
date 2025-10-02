@@ -6,7 +6,7 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 
 from prompt_library.prompts import PROMPT_REGISTRY, PromptType
-from retriever.retrieval import Retriever
+from retrieval.retriever import Retriever
 from utils.model_loader import ModelLoader
 from langgraph.checkpoint.memory import MemorySaver
 import asyncio
@@ -60,17 +60,25 @@ class AgenticRAG:
     async def _vector_retriever(self, state: AgentState):
         print("--- RETRIEVER (MCP) ---")
         query = state["messages"][-1].content
-        tool = next(t for t in self.mcp_tools if t.name == "get_product_info")
-        result= await tool.ainvoke({"query": query})
+        # Safely find the tool; if MCP tools aren't available, return a friendly fallback
+        tool = next((t for t in getattr(self, "mcp_tools", []) if getattr(t, "name", None) == "get_product_info"), None)
+        if tool is None:
+            return {"messages": [HumanMessage(content="No local results found.")]}
+        result = await tool.ainvoke({"query": query})
         context = result if result else "No data"
         return {"messages": [HumanMessage(content=context)]}
 
     def _web_search(self, state: AgentState):
         print("--- WEB SEARCH (MCP) ---")
         query = state["messages"][-1].content
-        tool = next(t for t in self.mcp_tools if t.name == "web_search")
-        result = asyncio.run(tool.ainvoke({"query": query}))
-        context = result if result else "No data from web"
+        # Use the MCP web_search tool if available; otherwise fallback
+        tool = next((t for t in getattr(self, "mcp_tools", []) if getattr(t, "name", None) == "web_search"), None)
+        if tool is None:
+            context = "No data from web"
+        else:
+            # Run the async tool invocation in the current event loop
+            result = asyncio.run(tool.ainvoke({"query": query}))
+            context = result if result else "No data from web"
         return {"messages": [HumanMessage(content=context)]}
 
     def _grade_documents(self, state: AgentState) -> Literal["generator", "rewriter"]:
@@ -152,10 +160,32 @@ class AgenticRAG:
     # ---------- Public Run ----------
     def run(self, query: str, thread_id: str = "default_thread") -> str:
         """Run the workflow for a given query and return the final answer."""
-        result = self.app.invoke({"messages": [HumanMessage(content=query)]},
-                                 config={"configurable": {"thread_id": thread_id}})
+        # Synchronous compatibility: run the async invocation in an event loop
+        # This is kept for backwards compatibility when running from CLI.
+        result = asyncio.run(
+            self.app.ainvoke({"messages": [HumanMessage(content=query)]},
+                              config={"configurable": {"thread_id": thread_id}})
+        )
         return result["messages"][-1].content
 
+    async def run_async(self, query: str, thread_id: str = "default_thread") -> str:
+        """Async run method that uses the async API. Initializes MCP tools if needed."""
+        # Ensure MCP tools are available
+        if not hasattr(self, "mcp_tools") or self.mcp_tools is None:
+            try:
+                self.mcp_tools = await self.mcp_client.get_tools()
+            except Exception:
+                # If tools cannot be loaded, set to empty list to avoid crash in nodes
+                self.mcp_tools = []
+
+        result = await self.app.ainvoke({"messages": [HumanMessage(content=query)]},
+                                         config={"configurable": {"thread_id": thread_id}})
+        return result["messages"][-1].content
+#  def run(self, query: str, thread_id: str = "default_thread") -> str:
+#         """Run the workflow for a given query and return the final answer."""
+#         result = self.app.invoke({"messages": [HumanMessage(content=query)]},
+#                                  config={"configurable": {"thread_id": thread_id}})
+#         return result["messages"][-1].content
 
 if __name__ == "__main__":
     rag_agent = AgenticRAG()
